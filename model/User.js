@@ -1,9 +1,12 @@
 class User
 {
-    constructor(name, age)
+    constructor(name, email, password)
     {
         this.name = name;
-        this.age = age;
+        this.email = email;
+        this.password = password;
+        this.projects = [];
+        this.github = null;
     }
 }
 

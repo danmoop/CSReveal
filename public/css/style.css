@@ -6,6 +6,10 @@
     background-color: rgb(76, 175, 80);
 }
 
+.warning {
+    color: rgb(244,67,54);
+}
+
 .container {
     width: 66%;
     margin: 0px auto;
