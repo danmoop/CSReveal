@@ -35,6 +35,11 @@
     padding-bottom: 25px;
 }
 
+#editor { 
+    width: 100vw;
+    height: 100vh;
+}
+
 .card {
     background-color: #ffffff;
 
