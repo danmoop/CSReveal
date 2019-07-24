@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CSReveal - Room</title>
+</head>
+
+<body>
+
+    <h1>Room id: <%= roomObj.id %></h1>
+    <h1 id="userID"></h1>
+
+    <textarea class="mdl-textfield__input" type="text" rows= "3" id="textArea" oninput="textChanged(this.value)"></textarea>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        
+        setTimeout(() => {
+            document.getElementById('userID').innerHTML = `Your id: ${socket.id}`;
+
+            socket.emit('joinedRoom', {
+                clientId: socket.id,
+                roomId: '<%= roomObj.id %>'
+            });
+        }, 1000);
+
+
+        socket.on('applyText', text => {
+            document.getElementById('textArea').value = text;
+        });
+
+        function textChanged(value) {
+            socket.emit('textChanged', {
+                clientId: socket.id,
+                roomId: '<%= roomObj.id %>',
+                content: value
+            });
+        }
+    </script>
+</body>
+
+</html>
