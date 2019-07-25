@@ -32,22 +32,46 @@
 							<div class="container">
 								<h3>Here you can generate a room for face-to-face coding reveal</h3>
 							</div>
+							<select name="lang">
+								<option value="java">Java</option>
+								<option value="javascript">JavaScript</option>
+							</select>
 							<input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
 								type="submit" value="Generate room">
 						</form>
 
 						<%if (roomId) { %>
-							<hr>
-							<h2>Your room id: <%= roomId %></h2>
-							<a href="/room/<%= roomId %>" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-								Proceed
-							</a>
+						<hr>
+						<h2>Your room id: <%= roomId %></h2>
+						<a href="/room/<%= roomId %>"
+							class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+							Proceed
+						</a>
 						<% } %>
+
+						<hr>
+						<h3>Or join an existing room by Id</h3>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<input class="mdl-textfield__input" type="text" id="roomIdTextField">
+							<label class="mdl-textfield__label" for="roomIdTextField">Room Id</label>
+						</div>
+						<a id="roomHref"
+							class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect">
+							Join
+						</a>
 					</div>
 				</div>
 			</div>
 		</main>
 	</div>
+
+	<script>
+		document.getElementById('roomIdTextField').addEventListener('keyup', (e) => {
+			var val = document.getElementById('roomIdTextField').value;
+
+			document.getElementById('roomHref').href = 'room/' + val;
+		});
+	</script>
 </body>
 
 </html>

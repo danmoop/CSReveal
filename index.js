@@ -3,6 +3,7 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var parser = require('body-parser');
+const { exec } = require('child_process');
 var log = console.log;
 
 app.set('view enigne', 'ejs');
@@ -38,7 +39,8 @@ app.post('/generateRoom', (req, res) => {
 
   var room = {
     id: _id,
-    users: []
+    users: [],
+    lang: req.body.lang
   }
 
   rooms.push(room);
@@ -74,16 +76,20 @@ function getRoomById(id) {
 io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     var room = rooms.filter(room => room.users.indexOf(socket.id) != -1)[0];
-    room.users.splice(room.users.indexOf(socket.id), 1);
 
-    if (room.users.length == 0) {
-      rooms.splice(rooms.indexOf(room), 1);
-    }
+    setTimeout(() => {
+      if (room != undefined) {
+        room.users.splice(room.users.indexOf(socket.id), 1);
+        if (room.users.length == 0) {
+          rooms.splice(rooms.indexOf(room), 1);
+        }
+      }
+    }, 1000);
   });
 
   socket.on('joinedRoom', (data) => {
     var room = getRoomById(data.roomId);
-    
+
     room.users.push(data.clientId);
   });
 
@@ -91,9 +97,9 @@ io.on('connection', (socket) => {
     var room = getRoomById(data.roomId);
 
     room.users.forEach(user => {
-      if(user != socket.id) {
+      if (user != socket.id) {
         io.sockets.connected[user].emit('applyText', data.content);
       }
     });
-  })
+  });
 });

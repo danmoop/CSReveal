@@ -19,15 +19,19 @@
             <div class="mdl-layout__header-row">
                 <a href="/" class="mdl-layout-title" style="color: white; text-decoration: none;">CSReveal | </a>
                 <span class="mdl-layout-title"> Room id: <%= roomObj.id %> | </span>
-                <span id="userID" class="mdl-layout-title">Your id</span>
+                <span id="userID" class="mdl-layout-title" style="display: none;">Your id</span>
+                <span id="userID" class="mdl-layout-title"> | Language - <%= roomObj.lang %></span>
+                <button id="compileBtn" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect"
+                    style="color: white;">
+                    <i class="material-icons">play_circle_filled</i>
+                </button>
                 <div class="mdl-layout-spacer"></div>
                 <nav class="mdl-navigation mdl-layout--large-screen-only">
                 </nav>
             </div>
         </header>
         <main class="mdl-layout__content">
-
-            <div id="editor">// Hello there!</div>
+            <div id="editor"></div>
         </main>
     </div>
 
@@ -39,10 +43,22 @@
 
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
-        editor.session.setMode("ace/mode/javascript");
+        editor.session.setMode("ace/mode/" + "<%= roomObj.lang %>");
         editor.setFontSize("22px");
 
-        document.getElementById("editor").addEventListener('keyup', function () {
+        var language = "<%= roomObj.lang %>";
+
+        if (language == 'java') {
+            var javaValue =
+                '// Hello world! \nclass Main { \n    public static void main(String[] args) {\n      System.out.println("Hello world!"); \n  } \n}';
+            editor.getSession().setValue(javaValue);
+        } else if (language == 'javascript') {
+            var jsValue =
+                '// Hello world! \nfunction reverse(string) { \n  return string.split("").reverse().join(""); \n}';
+            editor.getSession().setValue(jsValue);
+        }
+
+        document.getElementById("editor").addEventListener('keyup', () => {
             var value = editor.getSession().getValue();
 
             socket.emit('textChanged', {
@@ -50,7 +66,7 @@
                 roomId: '<%= roomObj.id %>',
                 content: value
             });
-        })
+        });
 
         setTimeout(() => {
             document.getElementById('userID').innerHTML = ` Your id: ${socket.id}`;
